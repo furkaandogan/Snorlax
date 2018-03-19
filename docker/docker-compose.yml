@@ -1,0 +1,41 @@
+version: "3.4"
+services:
+  api:
+    image: snorlax-api:1.0.0-beta
+    build:
+      context: ../src/Snorlax.Web.Api/
+      dockerfile: Dockerfile
+    env_file: 
+      - api.environment.prod.env
+    deploy:
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 100M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+  web:
+    image: snorlax-web:1.0.0-beta
+    env_file: 
+      - web.environment.prod.env
+  cdn:
+    image: snorlax-cdn:1.0.0-beta
+    build:
+      context: ../src/Snorlax.CND.Api
+      dockefile: Dockerfile
+    environment: 
+      - appId=snorlax
+      - host=http://snorlax.com
+  mognodb:
+    image: mongo:3.0
