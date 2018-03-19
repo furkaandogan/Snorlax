@@ -20,7 +20,6 @@ namespace Snorlax.Web.Api.Models.Request
         { 
             Repository.Model.Product product= new Repository.Model.Product()
             {
-                Id=this.Id,
                 Name=this.Name,
                 CategoryId=this.CategoryId,
                 SupplierId=this.SupplierId,
